@@ -1,5 +1,5 @@
 export const today = () => {
-    return getDate(new Date);
+    return getDate(new Date());
 };
 
 export const getDate = (dateTime) => {
