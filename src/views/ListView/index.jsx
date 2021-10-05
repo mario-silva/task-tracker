@@ -3,6 +3,7 @@ import {API, graphqlOperation} from "aws-amplify";
 import {listTasks} from "../../graphql/queries";
 import {Button, Link, Typography} from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
+import {dateTimeObjFromString, getDateTime} from "../../utils";
 
 const columns = [
     {
@@ -12,7 +13,7 @@ const columns = [
         flex: 1,
         editable: true,
         renderCell: (params) => {
-            const link = `#/task/${params.id}`;
+            const link = `#/task/edit/${params.id}`;
             const text = params.row.title;
             return (
                 <Link href={link}>
@@ -34,6 +35,17 @@ const columns = [
         minWidth: 210,
         flex: 1,
         editable: true,
+    },
+    {
+        field: 'updatedAt',
+        headerName: 'Last updated',
+        minWidth: 210,
+        flex: 1,
+        editable: true,
+        renderCell: (params) => {
+            const text = params.row.updatedAt;
+            return getDateTime(dateTimeObjFromString(text));
+        },
     },
 ];
 
