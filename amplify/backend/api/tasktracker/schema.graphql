@@ -1,0 +1,8 @@
+#2) Create a task with a title, description, status (completed, in progress, etc.), and due date
+type Task @model {
+  id: ID!
+  title: String!
+  description: String!
+  Status: String!
+  dueDate: AWSDateTime!
+}
