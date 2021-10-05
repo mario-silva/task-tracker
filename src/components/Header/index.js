@@ -10,9 +10,6 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
-    menuButton: {
-        marginRight: theme.spacing(2),
-    },
     title: {
         flexGrow: 1,
     },
@@ -31,11 +28,15 @@ export const Header = () => {
         }
     }
 
+    const showList = () => {
+        window.location.href = '/';
+    }
+
     return (
         <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
-                    <Typography variant="h6" className={classes.title}>
+                    <Typography variant="h6" className={classes.title} onClick={showList}>
                         Task Tracker
                     </Typography>
                     <Button color="inherit" onClick={logout}>Logout</Button>
