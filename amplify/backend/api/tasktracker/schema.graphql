@@ -4,5 +4,5 @@ type Task @model {
   title: String!
   description: String!
   status: String!
-  dueDate: AWSDateTime!
+  dueDate: AWSDate!
 }
