@@ -4,7 +4,6 @@ import awsconfig from './aws-exports';
 import './App.css';
 import {Route, HashRouter} from "react-router-dom";
 import { ListView } from "./views/ListView";
-// import { DetailView } from "./views/DetailView";
 import { CreateOrEdit } from "./views/CreateOrEdit";
 
 Amplify.configure(awsconfig);
@@ -19,7 +18,7 @@ function App() {
         </header>
         <HashRouter>
             <Route path="/" exact={true} component={ListView} />
-            {/*<Route path="/task/:taskID" exact={true} component={DetailView} />*/}
+            <Route path="/task/:taskID" exact={true} component={CreateOrEdit} />
             <Route path="/task/new" exact={true} component={CreateOrEdit} />
         </HashRouter>
     </div>

@@ -6,6 +6,7 @@
     "@aws-amplify/ui-react": "^1.2.19",
     "@date-io/date-fns": "1.x",
     "@material-ui/core": "^4.12.3",
+    "@material-ui/data-grid": "^4.0.0-alpha.37",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/pickers": "^3.3.10",
     "@testing-library/jest-dom": "^5.11.4",

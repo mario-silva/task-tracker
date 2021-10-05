@@ -7,6 +7,7 @@ import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@mat
 import DateFnsUtils from "@date-io/date-fns";
 import {useForm} from "react-hook-form";
 import {MuiPickersUtilsProvider, DatePicker} from "@material-ui/pickers";
+import {today, getDate} from "../../utils";
 
 const statuses = [
     {
@@ -26,7 +27,7 @@ const statuses = [
 export const CreateOrEdit = () => {
     const { taskID } = useParams();
     const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const [selectedDate, handleDateChange] = useState(new Date().toISOString().slice(0, 10));
+    const [selectedDate, handleDateChange] = useState(today());
 
     const { task, setTask } = useState({
         title: '',
@@ -36,18 +37,18 @@ export const CreateOrEdit = () => {
     });
 
     const onSubmit = async (data) => {
-        data.dueDate = selectedDate;
+        data.dueDate = getDate(selectedDate);
         if (taskID) {
             data.id = taskID;
             await API.graphql({query: updateTask, variables: {input: data}});
         }
         else {
-            await API.graphql({ query: createTask, variables: {input: data}});
+            await API.graphql({query: createTask, variables: {input: data}});
         }
+        window.location.replace("/");
     };
 
     useEffect(() => {
-        console.log(task);
         const fetchTask = async () => {
             try {
                 const taskData = await API.graphql(graphqlOperation(getTask), {id: taskID});
@@ -59,7 +60,6 @@ export const CreateOrEdit = () => {
             }
         };
         if (taskID) {
-            console.log('Fetching zi task');
             fetchTask();
         }
     }, [taskID, task]);
