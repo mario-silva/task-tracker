@@ -7,7 +7,7 @@ export const onCreateTask = /* GraphQL */ `
       id
       title
       description
-      Status
+      status
       dueDate
       createdAt
       updatedAt
@@ -20,7 +20,7 @@ export const onUpdateTask = /* GraphQL */ `
       id
       title
       description
-      Status
+      status
       dueDate
       createdAt
       updatedAt
@@ -33,7 +33,7 @@ export const onDeleteTask = /* GraphQL */ `
       id
       title
       description
-      Status
+      status
       dueDate
       createdAt
       updatedAt

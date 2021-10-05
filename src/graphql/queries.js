@@ -7,7 +7,7 @@ export const getTask = /* GraphQL */ `
       id
       title
       description
-      Status
+      status
       dueDate
       createdAt
       updatedAt
@@ -25,7 +25,7 @@ export const listTasks = /* GraphQL */ `
         id
         title
         description
-        Status
+        status
         dueDate
         createdAt
         updatedAt
