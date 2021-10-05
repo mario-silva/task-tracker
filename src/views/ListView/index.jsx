@@ -1,14 +1,15 @@
 import {useEffect, useState} from "react";
 import {API, graphqlOperation} from "aws-amplify";
 import {listTasks} from "../../graphql/queries";
-import {Link} from "@material-ui/core";
+import {Button, Link, Typography} from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 
 const columns = [
     {
         field: 'title',
         headerName: 'Title',
-        width: 150,
+        minWidth: 110,
+        flex: 1,
         editable: true,
         renderCell: (params) => {
             const link = `#/task/${params.id}`;
@@ -23,13 +24,15 @@ const columns = [
     {
         field: 'status',
         headerName: 'Status',
-        width: 150,
+        minWidth: 150,
+        flex: 1,
         editable: true,
     },
     {
         field: 'dueDate',
         headerName: 'Due Date',
-        width: 210,
+        minWidth: 210,
+        flex: 1,
         editable: true,
     },
 ];
@@ -52,13 +55,26 @@ export const ListView = () => {
     }, []);
 
     return (
-        <div className="taskList" style={{ height: 400 }}>
-            <DataGrid
-                rows={tasks}
-                columns={columns}
-                pageSize={5}
-                disableSelectionOnClick
-            />
+        <div style={{ height: 400, width: '100%' }}>
+            <Typography variant="h2" component="h2">
+                All your tasks
+            </Typography>
+
+            <Button href={'#/task/new'} variant="contained" color="primary">
+                Create new Task
+            </Button>
+
+            <div style={{ display: 'flex', height: '100%' }}>
+                <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                        autoHeight
+                        rows={tasks}
+                        columns={columns}
+                        pageSize={5}
+                        disableSelectionOnClick
+                    />
+                </div>
+            </div>
         </div>
     );
 };
