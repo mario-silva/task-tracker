@@ -3,11 +3,25 @@ import {useEffect, useState} from "react";
 import {API, graphqlOperation} from "aws-amplify";
 import {getTask} from "../../graphql/queries";
 import {createTask, updateTask} from "../../graphql/mutations";
-import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
+import {Button, FormControl, InputLabel, makeStyles, MenuItem, Select, TextField, Typography} from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import {useForm} from "react-hook-form";
 import {MuiPickersUtilsProvider, DatePicker} from "@material-ui/pickers";
-import {today, getDate} from "../../utils";
+import {today, getDate, dateTimeObjFromString} from "../../utils";
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& .MuiTextField-root': {
+            margin: theme.spacing(1),
+        },
+    },
+    pushRight: {
+        marginLeft: '8px',
+    },
+    pushDown: {
+        marginTop: '20px',
+    },
+}));
 
 const statuses = [
     {
@@ -25,19 +39,24 @@ const statuses = [
 ];
 
 export const CreateOrEdit = () => {
+    const classes = useStyles();
     const { taskID } = useParams();
-    const { register, handleSubmit, watch, formState: { errors } } = useForm();
-    const [selectedDate, handleDateChange] = useState(today());
+    const { register, handleSubmit, setValue, watch, formState: { errors } } = useForm();
 
-    const { task, setTask } = useState({
-        title: '',
-        description: '',
-        status: '',
-        dueDate: '',
-    });
+    // for some reason the Material UI Select doesn't work with the register
+    // the way the text fields do. So this is a hack for it :/
+    const status = watch("status", '');
+    // same with the datepicker.
+    const [selectedDate, setSelectedDate] = useState(today());
 
     const onSubmit = async (data) => {
-        data.dueDate = getDate(selectedDate);
+        let date = selectedDate;
+        if (typeof selectedDate === 'string') {
+            // if you don't change the date when you're updating a task
+            // it comes as a string :/
+            date = dateTimeObjFromString(selectedDate);
+        }
+        data.dueDate = getDate(date);
         if (taskID) {
             data.id = taskID;
             await API.graphql({query: updateTask, variables: {input: data}});
@@ -51,10 +70,12 @@ export const CreateOrEdit = () => {
     useEffect(() => {
         const fetchTask = async () => {
             try {
-                const taskData = await API.graphql(graphqlOperation(getTask), {id: taskID});
-                console.log('Task list', taskData);
-                // const taskList = taskData.data.listTasks.items;
-                // setTask(taskList);
+                const result = await API.graphql(graphqlOperation(getTask, {id: taskID}));
+                const taskData = result.data.getTask;
+                setSelectedDate(taskData.dueDate);
+                ['title', 'description', 'status'].forEach(fieldName => {
+                    setValue(fieldName, taskData[fieldName]);
+                });
             } catch (error) {
                 console.log('error on fetching tasks', error);
             }
@@ -62,48 +83,64 @@ export const CreateOrEdit = () => {
         if (taskID) {
             fetchTask();
         }
-    }, [taskID, task]);
+    }, [taskID]);
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
+            <Typography variant="h4" component="h4" className={classes.pushDown}>
+                {taskID ? 'Edit task' : 'Create new task'}
+            </Typography>
             <div>
                 <TextField
+                    fullWidth
                     label="Title"
-                    // value={task ? task.title : ''}
+                    InputLabelProps={{ shrink: true }}
+                    error={errors.title}
                     {...register("title", { required: true })}
                 />
             </div>
             <div>
                 <TextField
+                    fullWidth
                     label="Description"
-                    // value={task ? task.description : ''}
+                    multiline
+                    InputLabelProps={{ shrink: true }}
+                    rows={4}
                     {...register("description", { required: true })}
+                    variant="outlined"
+                    error={errors.description}
                 />
             </div>
-            <FormControl>
-                <InputLabel id="status">Status</InputLabel>
-                <Select
-                    labelId="status"
-                    id="status-select"
-                    // value={task ? task.status : ''}
-                    label="Status"
-                    autoWidth
-                    name="status"
-                    {...register("status", { required: true })}
-                >
-                    {statuses.map(option => (
-                        <MenuItem value={option.value} key={option.value}>{option.label}</MenuItem>
-                    ))}
-                </Select>
-
+            <div className={classes.pushRight}>
+                <FormControl>
+                    <InputLabel id="status">Status</InputLabel>
+                    <Select
+                        fullWidth
+                        labelId="status"
+                        id="status-select"
+                        label="Status"
+                        autoWidth
+                        name="status"
+                        value={status}
+                        error={errors.status}
+                        {...register("status", { required: true })}
+                    >
+                        {statuses.map(option => (
+                            <MenuItem value={option.value} key={option.value}>{option.label}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </div>
+            <div>
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                    <DatePicker value={selectedDate} onChange={handleDateChange} />
+                    <DatePicker value={selectedDate} onChange={setSelectedDate} />
                 </MuiPickersUtilsProvider>
-
+            </div>
+            <div className={classes.pushRight}>
                 <Button variant="contained" color="primary" type="submit">
                     Submit
                 </Button>
-            </FormControl>
+            </div>
         </form>
     );
 }

@@ -18,8 +18,8 @@ function App() {
         <Header />
         <HashRouter>
             <Route path="/" exact={true} component={ListView} />
-            <Route path="/task/:taskID" exact={true} component={CreateOrEdit} />
             <Route path="/task/new" exact={true} component={CreateOrEdit} />
+            <Route path="/task/edit/:taskID" exact={true} component={CreateOrEdit} />
         </HashRouter>
     </Container>
 );
