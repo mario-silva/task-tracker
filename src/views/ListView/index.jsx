@@ -1,8 +1,10 @@
 import {useEffect, useState} from "react";
 import {API, graphqlOperation} from "aws-amplify";
-import {listTasks} from "../../graphql/queries";
 import {Button, Link, makeStyles, Typography} from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
+import {listTasks} from "../../graphql/queries";
+import {statusValueToLabel} from "../../bl/task";
+
 import {dateTimeObjFromString, getDateTime} from "../../utils/datetime";
 
 const columns = [
@@ -28,6 +30,7 @@ const columns = [
         minWidth: 150,
         flex: 1,
         editable: true,
+        valueGetter: (params) => `${statusValueToLabel[params.row.status]}`,
     },
     {
         field: 'dueDate',

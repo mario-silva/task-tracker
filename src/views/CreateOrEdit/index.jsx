@@ -1,13 +1,14 @@
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {API, graphqlOperation} from "aws-amplify";
-import {getTask} from "../../graphql/queries";
-import {createTask, updateTask} from "../../graphql/mutations";
 import {Button, FormControl, InputLabel, makeStyles, MenuItem, Select, TextField, Typography} from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
 import {useForm} from "react-hook-form";
 import {MuiPickersUtilsProvider, DatePicker} from "@material-ui/pickers";
+import {getTask} from "../../graphql/queries";
+import {createTask, updateTask} from "../../graphql/mutations";
 import {today, getDate, dateTimeObjFromString} from "../../utils/datetime";
+import {statuses} from "../../bl/task";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -26,20 +27,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const statuses = [
-    {
-        label: 'To Do',
-        value: 'toDo',
-    },
-    {
-        label: 'In Progress',
-        value: 'inProgress',
-    },
-    {
-        label: 'Done',
-        value: 'done',
-    },
-];
+
 
 export const CreateOrEdit = () => {
     const classes = useStyles();
