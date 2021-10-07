@@ -7,19 +7,22 @@ import {Button, FormControl, InputLabel, makeStyles, MenuItem, Select, TextField
 import DateFnsUtils from "@date-io/date-fns";
 import {useForm} from "react-hook-form";
 import {MuiPickersUtilsProvider, DatePicker} from "@material-ui/pickers";
-import {today, getDate, dateTimeObjFromString} from "../../utils";
+import {today, getDate, dateTimeObjFromString} from "../../utils/datetime";
 
 const useStyles = makeStyles((theme) => ({
     root: {
         '& .MuiTextField-root': {
-            margin: theme.spacing(1),
+            marginTop: theme.spacing(2),
         },
+        '& .MuiButtonBase-root': {
+            marginTop: theme.spacing(1),
+        }
     },
     pushRight: {
-        marginLeft: '8px',
+        marginLeft: theme.spacing(1),
     },
     pushDown: {
-        marginTop: '20px',
+        marginTop: theme.spacing(3),
     },
 }));
 

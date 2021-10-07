@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
 import {API, graphqlOperation} from "aws-amplify";
 import {listTasks} from "../../graphql/queries";
-import {Button, Link, Typography} from "@material-ui/core";
+import {Button, Link, makeStyles, Typography} from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
-import {dateTimeObjFromString, getDateTime} from "../../utils";
+import {dateTimeObjFromString, getDateTime} from "../../utils/datetime";
 
 const columns = [
     {
@@ -49,7 +49,19 @@ const columns = [
     },
 ];
 
+const useStyles = makeStyles((theme) => ({
+    pushDown: {
+        marginTop: theme.spacing(2),
+    },
+    dataGrid: {
+        display: 'flex',
+        height: '100%',
+        marginTop: theme.spacing(2),
+    }
+}));
+
 export const ListView = () => {
+    const classes = useStyles();
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
@@ -67,16 +79,21 @@ export const ListView = () => {
     }, []);
 
     return (
-        <div style={{ height: 400, width: '100%' }}>
-            <Typography variant="h2" component="h2">
+        <div>
+            <Typography variant="h2" component="h2" className={classes.pushDown}>
                 All your tasks
             </Typography>
 
-            <Button href={'#/task/new'} variant="contained" color="primary">
+            <Button
+                href={'#/task/new'}
+                variant="contained"
+                color="primary"
+                className={classes.pushDown}
+            >
                 Create new Task
             </Button>
 
-            <div style={{ display: 'flex', height: '100%' }}>
+            <div className={classes.dataGrid}>
                 <div style={{ flexGrow: 1 }}>
                     <DataGrid
                         autoHeight
